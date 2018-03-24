@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+	{% load static %}
+	<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="{% static 'js/profile.js' %}"></script>
+
+	<title>{{user.username}}</title>
+	<style>
+	.nav-link
+	{
+		float:right;
+	}
+	
+</style>
+</head>
+<body>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<a class="navbar-brand" href="#">
+			<img src="/media/logo.png" width="30" height="30" alt="" class="d-inline-block align-top">
+			Department Of Applied Chemistry                        
+		</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			
+			<ul class="navbar-nav mr-auto">
+				
+				
+				<li class="nav-item">
+					<a class="nav-link" href="/account_login/profile/{{request.user.username}}">Profile</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#">Add Internships</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#">Upload Certificates</a>
+				<li class="nav-item">
+					<a class="nav-link" href="/account_login/logout/">Logout</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+	<div class="container">
+			{% if messages %}
+			<div class="messages container col-sm-4 text-center">
+				{% for message in messages %}
+				<div class="alert alert-danger alert-dismissible fade show" role="alert">
+						{{ message }}
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+						</button>
+				</div>
+				{% endfor %}
+			</div>
+			{% endif %}
+	</div>
+	<div class="container jumbotron-container">
+		<div class="jumbotron">
+			<div class="container">
+				<div class="row justify-content-md-center">
+				<div class="col-sm-2">
+					<img src="{{user.profile.profile_picture.url}}" class="profile-image rounded-circle float-left" alt="Responsive image">
+				</div>
+				<div class="col-sm-6">
+					<div class="row">
+						<div class="col">
+							<h3 class="display-6">{{user.username}}</h3>
+						</div>
+						<div class="col">
+							{% if user == request.user%}
+							<button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#profileUpdateModal">Edit Profile</button>
+							
+							{% endif %}
+						</div>
+					</div>
+					
+					<p class="text-justify"><strong>{{user.profile.get_full_name}}</strong> {{user.profile.bio}}</p>
+				</p>
+			</div>
+		</div>
+	</div>
+</div>
+  
+  <div class="modal fade" id="profileUpdateModal" tabindex="-1" role="dialog" aria-labelledby="profileUpdateModalTitle" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <h5 class="modal-title" id="profileUpdateModalTitle">Edit Profile Details</h5>
+		  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		  </button>
+		</div>
+		<div class="modal-body">
+			<form action="/account_login/profile/{{request.user.username}}/update/" method="POST" enctype="multipart/form-data">
+				{% csrf_token %}
+				<div class="form-group">
+					<label for="first_name">email</label>
+					<input class="form-control" type="text" id="first_name" name="first_name" placeholder="{{user.first_name}}">
+			</div>
+			<div class="form-group">
+					<label for="last_name">internship1</label>
+				<input class="form-control" type="text" id="last_name" name="last_name" placeholder="{{user.last_name}}">
+			</div>
+			<div class="form-group">
+					<label for="bio">internship2</label>
+				<textarea class="form-control" type="text" id="bio" name="bio" placeholder="{{user.profile.bio}}"></textarea>
+			</div>
+			<div class="form-group">
+					<label for="bio">internship3</label>
+				<textarea class="form-control" type="text" id="bio" name="bio" placeholder="{{user.profile.bio}}"></textarea>
+			</div>
+			<div class="form-group">
+					<label for="bio">internship4</label>
+				<textarea class="form-control" type="text" id="bio" name="bio" placeholder="{{user.profile.bio}}"></textarea>
+			</div>
+			<div class="form-group">
+					<label for="profile-picture-change">Profile Picture</label>
+					<input name="profile_picture" type="file" class="form-control-file" id="profile-picture-change">
+				  </div>
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				<button class="btn btn-primary" type="submit">Update</button>
+			</form>
+		</div>
+	  </div>
+	</div>
+  </div>
+</div>
+</body>
+</html>
